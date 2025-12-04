@@ -35,6 +35,18 @@
             </div>
         `;
         document.body.insertAdjacentHTML("beforeend", containerHTML);
+        
+        document.getElementById("chat-modal-container").addEventListener("click", (e) => {
+            const modal = document.getElementById("chat-modal");
+
+            // If user clicked *outside* modal, close it
+            if (!modal.contains(e.target)) {
+                toggleChatModal(false);
+            }
+        });
+        document.getElementById("chat-modal").addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
 
         // ---- Toggle Modal Function (Global) ----
         window.toggleChatModal = async function (open) {
@@ -83,6 +95,7 @@
           }; 
                     
 })();
+
 
 
 
