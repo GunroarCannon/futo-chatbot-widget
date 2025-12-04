@@ -1,0 +1,17 @@
+{
+  "name": "futo_chatbot_frontend_test",
+  "version": "1.0.0",
+  "main": "chat_frontend.js",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "config-init": "tailwindcss init",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

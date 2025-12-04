@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Portal & AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by the Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app, db, auth;
+
+        // Initialize Firebase
+        if (firebaseConfig) {
+            setLogLevel('Debug');
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // Authentication
+            async function authenticate() {
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                        console.log("Signed in with custom token.");
+                    } else {
+                        await signInAnonymously(auth);
+                        console.log("Signed in anonymously.");
+                    }
+                } catch (error) {
+                    console.error("Firebase Auth error:", error);
+                }
+            }
+            authenticate();
+        }
+
+        // Make auth available globally for potential use
+        window.auth = auth;
+        window.db = db;
+    </script>
+    
+    <style>
+        :root {
+            --futo-green: #166534;
+            --futo-dark: #054e20;
+            --futo-light: #34d399;
+        }
+        .bg-futo-green { background-color: var(--futo-green); }
+        .hover\:bg-futo-dark:hover { background-color: var(--futo-dark); }
+        .text-futo-green { color: var(--futo-green); }
+        .bg-futo-light { background-color: var(--futo-light); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <header>
+        <div class="bg-futo-dark text-white p-2 text-sm">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center">
+                <nav class="flex flex-wrap space-x-3 md:space-x-4">
+                    <a href="#" class="font-bold bg-futo-light text-futo-dark py-1 px-3 rounded-lg transition hover:opacity-90">Key Institutional Data</a>
+                    <a href="#" class="py-1 px-2 rounded-lg hover:bg-gray-700 transition">FUTO Admission List</a>
+                    <a href="#" class="py-1 px-2 rounded-lg hover:bg-gray-700 transition">News</a>
+                    <a href="#" class="py-1 px-2 rounded-lg hover:bg-gray-700 transition">NUC</a>
+                    <a href="#" class="py-1 px-2 rounded-lg hover:bg-gray-700 transition">TETFund</a>
+                   
+                    <a href="#" onclick="window.toggleChatModal(true); return false;" 
+                       class="flex items-center space-x-1 py-1 px-2 rounded-lg font-semibold hover:bg-gray-700 transition cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2h-2.586l-2.707 2.707A1 1 0 0110 18v-2a2 2 0 00-2-2H4a2 2 0 01-2-2V5z" />
+                        </svg>
+                        <span>AI Assistant</span>
+                    </a>
+                </nav>
+                <div class="flex items-center mt-2 md:mt-0">
+                    <a href="#" class="bg-futo-green hover:bg-futo-dark py-1 px-3 rounded-lg font-semibold transition hidden sm:block">Student Portal</a>
+                    <button class="ml-4 p-1 rounded-full hover:bg-futo-green">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md">
+            <div class="max-w-7xl mx-auto p-4 flex flex-col lg:flex-row justify-between items-center">
+                
+                <div class="flex items-center mb-4 lg:mb-0">
+                    <img src="https://placehold.co/40x40/f0f0f0/166534?text=U" onerror="this.onerror=null;this.src='https://placehold.co/40x40/f0f0f0/166534?text=U';" alt="Logo" class="w-10 h-10 mr-3 rounded-full">
+                    <span class="text-xl font-bold text-gray-800">University Tech Hub</span>
+                </div>
+
+                <nav class="flex flex-wrap justify-center lg:justify-end space-x-3 md:space-x-6 text-gray-700 font-medium">
+                    <a href="#" class="hover:text-futo-green transition py-1 rounded-lg">Centers of Excellence</a>
+                    <a href="#" class="hover:text-futo-green transition py-1 rounded-lg">Who We Are</a>
+                    <a href="#" class="hover:text-futo-green transition py-1 rounded-lg">Academics</a>
+                    <a href="#" class="hover:text-futo-green transition py-1 rounded-lg">Library</a>
+                    <a href="#" class="hover:text-futo-green transition py-1 rounded-lg">Students</a>
+                    <a href="#" 
+                       class="py-1 px-2 rounded-lg hover:bg-gray-100 transition" 
+                       onclick="window.toggleChatModal(true); return false;">
+                        Chat
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+        <div class="bg-gray-300 h-64 flex items-center justify-center rounded-xl shadow-lg mt-8 mb-12">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-700 text-center p-4">
+                FEDERAL UNIVERSITY OF TECHNOLOGY OWERRI
+            </h1>
+        </div>
+        <div class="p-6 bg-white rounded-lg shadow-md border-t-4 border-futo-green">
+            <h2 class="text-xl font-bold text-futo-green mb-3">Core Content</h2>
+            <p class="text-gray-600">The main content of the university portal goes here. The AI Assistant chat functionality is loaded below.</p>
+        </div>
+    </main>
+
+    <footer class="bg-futo-dark text-white p-6 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-center md:justify-start gap-6 text-sm font-semibold">
+            <a href="#" class="bg-futo-green hover:bg-futo-light text-white py-2 px-4 rounded-lg transition shadow-md">How To Apply</a>
+            <a href="#" class="bg-futo-green hover:bg-futo-light text-white py-2 px-4 rounded-lg transition shadow-md">NERD Policy</a>
+            <a href="#" class="bg-futo-green hover:bg-futo-light text-white py-2 px-4 rounded-lg transition shadow-md">Success Guide</a>
+        </div>
+        <div class="max-w-7xl mx-auto text-center mt-4 text-xs text-gray-400">
+             &copy; 2025 University Tech Hub. All Rights Reserved.
+        </div>
+    </footer>
+    
+    <script src="futo_chatbot_widget.js"></script>
+
+    </body>
+</html>
