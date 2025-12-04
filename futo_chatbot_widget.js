@@ -19,7 +19,7 @@
         // ---- Insert Chat Containers ----
         const containerHTML = `
 
-            <link rel="stylesheet" href="/style.css">
+            <link rel="stylesheet" href="/dist/style.css">
             <button id="floating-chat-btn"
                 class="fixed bottom-6 right-6 z-[9999] p-4 bg-green-700 text-white 
                     rounded-full shadow-xl hover:bg-green-900 transition">
@@ -83,6 +83,7 @@
           }; 
                     
 })();
+
 
 
 
