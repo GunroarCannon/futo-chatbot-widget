@@ -59,7 +59,7 @@
                 }
             </style>
 
-            <link rel="stylesheet" href="${WIDGET_URL}/dist/style.css">
+            <link rel="stylesheet" href="${WIDGET_URL}/style.css">
             <div 
                 id="floating-chat-widget"
                 class="fixed bottom-6 right-6 z-[9999] w-20 h-20 flex flex-col items-center justify-center p-2 bg-green-700 text-white 
@@ -163,6 +163,7 @@ document.body.appendChild(script);
           }; 
                     
 })();
+
 
 
 
