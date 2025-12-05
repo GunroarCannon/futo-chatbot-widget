@@ -1,4 +1,14 @@
-(function () {   
+
+
+(function () { 
+    const scriptUrl = document.currentScript.src;
+
+    // 2. Create a new URL object to easily parse the components
+    const url = new URL(scriptUrl);
+
+    // 3. Reconstruct the base origin (protocol + host)
+    const WIDGET_URL = url.origin;
+    console.log("FUTO Chatbot Widget URL:", WIDGET_URL, "\n made from ", scriptUrl, "\n", url, "\n", url.origin);
     window.addEventListener("DOMContentLoaded", async () => {
         if (window.__ChatWidgetLoaded) return;
         window.__ChatWidgetLoaded = true;
@@ -49,7 +59,7 @@
                 }
             </style>
 
-            <link rel="stylesheet" href="dist/style.css">
+            <link rel="stylesheet" href="${WIDGET_URL}/dist/style.css">
             <div 
                 id="floating-chat-widget"
                 class="fixed bottom-6 right-6 z-[9999] w-20 h-20 flex flex-col items-center justify-center p-2 bg-green-700 text-white 
@@ -111,15 +121,30 @@
 
             if (!modal.dataset.loaded) {
                 try {
-                    const res = await fetch("chat.html");
+                    const res = await fetch(`${WIDGET_URL}/chat.html`);
                     modal.innerHTML = await res.text();
                     modal.dataset.loaded = "true";
 
                     // Load chat_frontend.js
                     const script = document.createElement("script");
-                    script.src = "chat_frontend.js";
-                    document.body.appendChild(script);
+script.src = `${WIDGET_URL}/chat_frontend.js`;
 
+// --- CRITICAL FIX: Use onload to ensure chat_frontend.js is ready ---
+script.onload = () => {
+    console.log("Chat frontend script loaded and running initialization.");
+    
+    // Now call the function inside chat_frontend.js that looks up elements.
+    // The HTML has been inserted (above) and the script has loaded (onload fired).
+    if (window.initializeChatLogic) {
+        window.initializeChatLogic();
+    } else {
+        console.error("Initialization function 'initializeChatLogic' not found.");
+    }
+};
+// -------------------------------------------------------------------
+
+console.log("Loading chat frontend script:", script.src);
+document.body.appendChild(script);
                 } catch (e) {
                     modal.innerHTML = `<div class='p-6 text-red-600'>Failed to load chat.</div>`;
                     console.error("Chat HTML load error:", e);
