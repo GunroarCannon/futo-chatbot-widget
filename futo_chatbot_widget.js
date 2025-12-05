@@ -24,10 +24,19 @@
         // ---- Insert Chat Containers ----
         const containerHTML = `
             <style>
+            @keyframes fade-in-anim {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
                 /* 1. Base Transition Setup for Smooth Movement */
                 #floating-chat-btn {
                     /* Tells the browser to smoothly animate the transform property */
                     transition: transform 0.3s ease-in-out; 
+                }
+
+                #floating-chat-widget {
+                    /* Apply the fade-in animation on load */
+                    animation: fade-in-anim 0.8s ease-in forwards;
                 }
 
                 /* 2. Hover State */
@@ -42,6 +51,7 @@
 
             <link rel="stylesheet" href="dist/style.css">
             <div 
+                id="floating-chat-widget"
                 class="fixed bottom-6 right-6 z-[9999] w-20 h-20 flex flex-col items-center justify-center p-2 bg-green-700 text-white 
                     rounded-full shadow-xl hover:bg-green-900 hover:scale-105 hover:-translate-y-1 transition">
                 
@@ -118,7 +128,7 @@
         }
 
         // ---- Floating button opens modal ----
-        document.getElementById("floating-chat-btn")
+        document.getElementById("floating-chat-widget")
                 .addEventListener("click", () => toggleChatModal(true));
           }; 
                     
