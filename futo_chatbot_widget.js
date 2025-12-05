@@ -121,6 +121,11 @@
 
             if (!modal.dataset.loaded) {
                 try {
+                    const iconLink = document.createElement("link");
+                    iconLink.rel = "stylesheet";
+                    iconLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css';
+                    document.head.appendChild(iconLink);
+                    
                     const res = await fetch(`${WIDGET_URL}/chat.html`);
                     modal.innerHTML = await res.text();
                     modal.dataset.loaded = "true";
@@ -158,5 +163,6 @@ document.body.appendChild(script);
           }; 
                     
 })();
+
 
 
