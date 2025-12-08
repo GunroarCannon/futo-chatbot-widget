@@ -3,9 +3,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
-  corePlugins: {
-    preflight: false,
-  },
-  prefix: "futo-",
+  plugins: []
 };
