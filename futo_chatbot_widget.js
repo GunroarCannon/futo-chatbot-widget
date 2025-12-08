@@ -1,38 +1,26 @@
-
-
-(function () { 
+(function () {
     const scriptUrl = document.currentScript.src;
-
-    // 2. Create a new URL object to easily parse the components
     const url = new URL(scriptUrl);
+    const WIDGET_URL = "."; //url.origin;
 
-    // 3. Reconstruct the base origin (protocol + host)
-    const WIDGET_URL = url.origin;
-    console.log("FUTO Chatbot Widget URL:", WIDGET_URL, "\n made from ", scriptUrl, "\n", url, "\n", url.origin);
-    window.addEventListener("DOMContentLoaded", async () => {
+    // Create shadow root wrapper
+    const widgetWrapper = document.createElement("div");
+    widgetWrapper.id = "futo-chat-widget-root";
+    const shadow = widgetWrapper.attachShadow({ mode: "open" });
+    document.addEventListener("DOMContentLoaded", () => {
         if (window.__ChatWidgetLoaded) return;
         window.__ChatWidgetLoaded = true;
-
-        // // Load Tailwind first
-        // const tw = document.createElement("script");
-        // tw.src = "https://cdn.tailwindcss.com";
-
-        // tw.onload = () => {
-            await initChatWidget();
-        // };
-
-        // document.head.appendChild(tw);
+        document.body.appendChild(widgetWrapper);
+        initChatWidget();
     });
 
     async function initChatWidget() {
-        // ---- Call backend health endpoint to wake up server ----
-        await fetch('https://futo-chatbot-server.onrender.com/healthz').catch((e) => {
-            console.error("Health check failed:", e);
-        });
-        console.log("Chatbot server is awake.");
-        // ---- Inject Tailwind if needed ----
-        // ---- Insert Chat Containers ----
-        const containerHTML = `
+        await fetch("https://futo-chatbot-server.onrender.com/healthz").catch(console.error);
+
+        // --- Inject HTML inside Shadow ---
+        
+        shadow.innerHTML = `
+          
             <style>
             @keyframes fade-in-anim {
                     from { opacity: 0; transform: translateY(20px); }
@@ -81,89 +69,53 @@
                 <div id="chat-modal" class="w-full max-w-sm md:max-w-lg mx-4"></div>
             </div>
         `;
-        
-        document.body.insertAdjacentHTML("beforeend", containerHTML);
-        
-        document.getElementById("chat-modal-container").addEventListener("click", (e) => {
-            const modal = document.getElementById("chat-modal");
 
-            // If user clicked *outside* modal, close it
-            if (!modal.contains(e.target)) {
-                toggleChatModal(false);
-            }
+        const btn = shadow.getElementById("floating-chat-widget");
+        const modalContainer = shadow.getElementById("chat-modal-container");
+        const modal = shadow.getElementById("chat-modal");
+
+        // Open modal
+        btn.addEventListener("click", () => toggleChatModal(true));
+
+        // Close when clicking outside modal
+        modalContainer.addEventListener("click", (e) => {
+            if (!modal.contains(e.target)) toggleChatModal(false);
         });
-        document.getElementById("chat-modal").addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
+        modal.addEventListener("click", (e) => e.stopPropagation());
 
-        // ---- Toggle Modal Function (Global) ----
-        window.toggleChatModal = async function (open) {
-            const container = document.getElementById("chat-modal-container");
-            const modal = document.getElementById("chat-modal");
-
-            document.body.style.overflow = open ? "hidden" : "";
-
+        async function toggleChatModal(open) {
             if (open) {
                 await loadChatModal();
-                container.classList.remove("opacity-0", "pointer-events-none");
-                setTimeout(() => modal.classList.add("modal-show"), 10);
+                modalContainer.style.opacity = "1";
+                modalContainer.style.pointerEvents = "auto";
             } else {
-                modal.classList.remove("modal-show");
-                setTimeout(() => {
-                    container.classList.add("opacity-0", "pointer-events-none");
-                }, 300);
-            }
-        };
-
-        // ---- Load Chat UI from chat.html ----
-        async function loadChatModal() {
-            const modal = document.getElementById("chat-modal");
-
-            if (!modal.dataset.loaded) {
-                try {
-                    const iconLink = document.createElement("link");
-                    iconLink.rel = "stylesheet";
-                    iconLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css';
-                    document.head.appendChild(iconLink);
-                    
-                    const res = await fetch(`${WIDGET_URL}/chat.html`);
-                    modal.innerHTML = await res.text();
-                    modal.dataset.loaded = "true";
-
-                    // Load chat_frontend.js
-                    const script = document.createElement("script");
-script.src = `${WIDGET_URL}/chat_frontend.js`;
-
-// --- CRITICAL FIX: Use onload to ensure chat_frontend.js is ready ---
-script.onload = () => {
-    console.log("Chat frontend script loaded and running initialization.");
-    
-    // Now call the function inside chat_frontend.js that looks up elements.
-    // The HTML has been inserted (above) and the script has loaded (onload fired).
-    if (window.initializeChatLogic) {
-        window.initializeChatLogic();
-    } else {
-        console.error("Initialization function 'initializeChatLogic' not found.");
-    }
-};
-// -------------------------------------------------------------------
-
-console.log("Loading chat frontend script:", script.src);
-document.body.appendChild(script);
-                } catch (e) {
-                    modal.innerHTML = `<div class='p-6 text-red-600'>Failed to load chat.</div>`;
-                    console.error("Chat HTML load error:", e);
-                }
+                modalContainer.style.opacity = "0";
+                modalContainer.style.pointerEvents = "none";
             }
         }
 
-        // ---- Floating button opens modal ----
-        document.getElementById("floating-chat-widget")
-                .addEventListener("click", () => toggleChatModal(true));
-          }; 
-                    
+        window.toggleChatModal = toggleChatModal;
+
+        async function loadChatModal() {
+            if (modal.dataset.loaded) return;
+
+            // Load bootstrap icons inside shadow
+            const iconLink = document.createElement("link");
+            iconLink.rel = "stylesheet";
+            iconLink.href = `${WIDGET_URL}/bootstrap-icons/font/bootstrap-icons.min.css`;//"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css";
+            shadow.appendChild(iconLink);
+
+            const res = await fetch(`${WIDGET_URL}/chat.html`);
+            modal.innerHTML = await res.text();
+            modal.dataset.loaded = "true";
+
+            // Load chat logic inside shadow
+            const script = document.createElement("script");
+            script.src = `${WIDGET_URL}/chat_frontend.js`;
+            script.onload = () => {
+                if (window.initializeChatLogic) window.initializeChatLogic(shadow);
+            };
+            shadow.appendChild(script);
+        }
+    }
 })();
-
-
-
-

@@ -8,14 +8,16 @@
         //initializeChatLogic();
     }
 
-    function initializeChatLogic() {
+    function initializeChatLogic(root) {
+
+        console.log("Checking if root exists ", root);
 
     function attemptToggleChatModal() {
         // Check if 'parent' exists in the current window context (not null or undefined)
         // AND if 'parent.toggleChatModal' is a valid function.
-        if (window.parent && typeof window.parent.toggleChatModal === 'function') {
+        if (window.parent && typeof window.toggleChatModal === 'function') {
             // If both conditions are true, safely call the function on the parent window.
-            window.parent.toggleChatModal();
+            window.toggleChatModal();
             console.log("parent.toggleChatModal() called successfully.");
             return true;
         }
@@ -27,14 +29,14 @@
     console.log("Chatfrontend.js loaded");
 
     // Call the function immediately as requested
-    document.getElementById('cancel-btn').addEventListener('click', () => {
+    root.getElementById('cancel-btn').addEventListener('click', () => {
                     
         attemptToggleChatModal();
     });
 
     // Variable declarations
     console.log("Setting up chat frontend..."); 
-    const modal = document.getElementById("chat-modal");
+    const modal = root.getElementById("chat-modal");
     const chatLog = modal.querySelector('#chat-log');
     const userInput = modal.querySelector('#user-input');
     const sendBtn = modal.querySelector('#send-btn');
@@ -56,7 +58,7 @@
             event.preventDefault(); 
             
             // Get the input element and value
-            const userInput = document.getElementById('user-input');
+            const userInput = root.getElementById('user-input');
             const message = userInput.value.trim();
 
             // Optional: Implement your own custom validation check here
@@ -86,7 +88,7 @@
     // --- Secure Event Attachment Helper Function (New) ---
     function attachMessageActions(tempId) {
         // We use a unique ID for the final container to ensure we target the right element
-        const messageContainer = document.getElementById(`${tempId}-final`);
+        const messageContainer = root.getElementById(`${tempId}-final`);
         if (!messageContainer) return;
 
         // 1. Attach Copy Listener
@@ -131,7 +133,7 @@
 
         //loading.classList.remove('hidden');
         timeoutId = setTimeout(() => {
-            const parentElement = document.getElementById(tempId);
+            const parentElement = root.getElementById(tempId);
             const loadingElement = parentElement.querySelector('.loading-text');
             if (loadingElement) {
                 loadingElement.textContent = "Checking network connection...";
@@ -159,15 +161,20 @@
             
             // --- SECURE HTML INJECTION (No onclick attributes) ---
             // We use tempId-final to target the element after insertion for event listeners
-            document.getElementById(tempId).outerHTML = `
+            root.getElementById(tempId).outerHTML = `
                 <div class="bot-message" id="${tempId}-final">
                     <strong>FUTO Assistant:</strong> ${data.response}
                     <div class="message-actions">
-                        <button class="action-btn" data-action="copy">
-                            <i class="bi bi-clipboard"></i>
+                        <button class="action-btn" data-action="copy"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                    </svg>
                         </button>
                         <button class="action-btn" data-action="retry" data-message="${encodeURIComponent(message)}">
-                            <i class="bi bi-arrow-clockwise"></i>
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+</svg>
                         </button>
                     </div>
                 </div>
@@ -183,7 +190,7 @@
             // --- SECURE HTML INJECTION for Error Message ---
             const errorMsg = error.message || "Sorry, I'm having trouble connecting. Please try again later.";
             
-            document.getElementById(tempId).outerHTML = `
+            root.getElementById(tempId).outerHTML = `
                 <div class="bot-message" id="${tempId}-final">
                     <strong>FUTO Assistant:</strong> ${errorMsg}
                     <div class="message-actions">
@@ -264,5 +271,6 @@
         }
     });
 }
-window.initializeChatLogic = initializeChatLogic
+//window.initializeChatLogic = initializeChatLogic
+window.initializeChatLogic = (root) => initializeChatLogic(root);
 })();
