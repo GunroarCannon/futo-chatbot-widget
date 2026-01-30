@@ -39,12 +39,12 @@ This repository contains only the **frontend widget**, not the chatbot backend.
 
 ---
 
-## 🔧 Installation (Embedding in any website)
+## Installation (Embedding in any website)
 
 To use the widget, simply include:
 
 ```html
-<script src="futo_chatbot_widget.js"></script>
+<script src="https://futo-chatbot-widget.onrender.com/futo_chatbot_widget.js"></script>
 ````
 
 The widget will automatically:
@@ -58,7 +58,7 @@ Nothing else is required.
 
 ---
 
-## 🖥️ How It Works (Basics)
+## How It Works (Basics)
 
 ### 1. `futo_chatbot_widget.js`
 
@@ -111,7 +111,7 @@ fetch("https://https://futo-chatbot-widget.onrender.com/chat", { ... })
 
 ---
 
-## 🎨 CSS / Tailwind
+## CSS / Tailwind
 
 Tailwind is compiled manually into:
 
@@ -134,7 +134,7 @@ src/input.css
 
 ---
 
-## 🧪 Testing The Widget
+## Testing The Widget
 
 This repo includes a demo page:
 
@@ -147,7 +147,7 @@ you should see a floating chat bubble appear in the bottom-right corner.
 
 ---
 
-## 🛠️ Backend Requirement
+## Backend Requirement
 
 The frontend expects a POST API endpoint:
 
@@ -170,7 +170,7 @@ You may host this using Node/Express, FastAPI, Firebase Functions, etc.
 
 ---
 
-## 📄 License
+## License
 
 MIT — free to use, modify, or embed in any website.
 
