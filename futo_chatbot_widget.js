@@ -1,7 +1,7 @@
 (function () {
     const scriptUrl = document.currentScript.src;
     const url = new URL(scriptUrl);
-    const WIDGET_URL = "."; //url.origin;
+    const WIDGET_URL = url.origin;
 
     // Create shadow root wrapper
     const widgetWrapper = document.createElement("div");
@@ -48,7 +48,6 @@
                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
                 }
             </style>
-<h1 class="text-5xl font-bold text-red-600 underline">Tailwind Test</h1>
             <link rel="stylesheet" href="${WIDGET_URL}/src/style.css">
             <div 
                 id="floating-chat-widget"
@@ -132,4 +131,5 @@
         }
     }
 })();
+
 
