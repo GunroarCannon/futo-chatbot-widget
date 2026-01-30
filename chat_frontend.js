@@ -9,6 +9,14 @@
     }
 
     function initializeChatLogic(root) {
+        const scrollToBottom = () => {
+            setTimeout(() => {
+            chatLog.scrollTo({
+            top: chatLog.scrollHeight,
+            behavior: 'smooth'
+            });
+            }, 100);
+        };
 
         console.log("Checking if root exists ", root);
 
@@ -121,6 +129,7 @@
         if (!retryMessage) {
             chatLog.innerHTML += `<div class="user-message"><strong>You:</strong> ${message}</div>`;
             userInput.value = '';
+            scrollToBottom()
         }
 
         const tempId = Date.now();
@@ -130,6 +139,7 @@
                 <div class="loading-text">Generating response...</div>
             </div>
         `;
+        scrollToBottom()
 
         //loading.classList.remove('hidden');
         timeoutId = setTimeout(() => {
@@ -206,6 +216,7 @@
             
             // --- ATTACH LISTENERS ---
             attachMessageActions(tempId);
+            scrollToBottom();
             
         } finally {
             chatLog.scrollTop = chatLog.scrollHeight;
