@@ -37,8 +37,6 @@
                 #floating-chat-widget {
                     /* Apply the fade-in animation on load */
                     animation: fade-in-anim 0.8s ease-in forwards;
-                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4),
-                        0 4px 10px rgba(0, 0, 0, 0.4);
                 }
 
                 /* 2. Hover State */
@@ -134,3 +132,4 @@
         }
     }
 })();
+
