@@ -19,7 +19,7 @@ This repository contains only the **frontend widget**, not the chatbot backend.
 
 ---
 
-## 📦 Folder Structure
+## Folder Structure
 
 ```
 
