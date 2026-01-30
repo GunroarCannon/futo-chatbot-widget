@@ -2,6 +2,7 @@
     const scriptUrl = document.currentScript.src;
     const url = new URL(scriptUrl);
     const WIDGET_URL = url.origin;
+    console.log(WIDGET_URL)
 
     // Create shadow root wrapper
     const widgetWrapper = document.createElement("div");
@@ -13,12 +14,10 @@
         document.body.appendChild(widgetWrapper);
         initChatWidget();
     });
-    console.log("Futo Chatbot Widget initialized with widget url: ", WIDGET_URL);
 
     async function initChatWidget() {
-        console.log("Waiting for chat widget to load...");
-       // await fetch("https://futo-chatbot-server.onrender.com/healthz").catch(console.error);
-        console.log("Chat widget server is reachable, loading widget...");
+        await fetch("https://futo-chatbot-server.onrender.com/healthz").catch(console.error);
+
         // --- Inject HTML inside Shadow ---
         
         shadow.innerHTML = `
@@ -37,6 +36,9 @@
                 #floating-chat-widget {
                     /* Apply the fade-in animation on load */
                     animation: fade-in-anim 0.8s ease-in forwards;
+                    
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+                        0 4px 10px rgba(0, 0, 0, 0.3);
                 }
 
                 /* 2. Hover State */
@@ -48,7 +50,8 @@
                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
                 }
             </style>
-            <link rel="stylesheet" href="${WIDGET_URL}/src/style.css">
+
+            <link rel="stylesheet" href="${WIDGET_URL}/style.css">
             <div 
                 id="floating-chat-widget"
                 class="fixed bottom-6 right-6 z-[9999] w-20 h-20 flex flex-col items-center justify-center p-2 bg-green-700 text-white 
@@ -71,9 +74,6 @@
             </div>
         `;
 
-        console.log("Chat widget HTML injected");
-
-        // --- Setup Event Listeners ---
         const btn = shadow.getElementById("floating-chat-widget");
         const modalContainer = shadow.getElementById("chat-modal-container");
         const modal = shadow.getElementById("chat-modal");
@@ -109,9 +109,6 @@
             iconLink.href = `${WIDGET_URL}/bootstrap-icons/font/bootstrap-icons.min.css`;//"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css";
             shadow.appendChild(iconLink);
 
-            console.log("Loading chat modal content...");
-            
-
             const res = await fetch(`${WIDGET_URL}/chat.html`);
             modal.innerHTML = await res.text();
             modal.dataset.loaded = "true";
@@ -120,16 +117,9 @@
             const script = document.createElement("script");
             script.src = `${WIDGET_URL}/chat_frontend.js`;
             script.onload = () => {
-                if (window.initializeChatLogic) {
-                    window.initializeChatLogic(shadow);
-                    console.log("Chat logic initialized cause of load");
-                } else {
-                    console.log("Chat logic script loaded, but initializeChatLogic not found");
-                }
+                if (window.initializeChatLogic) window.initializeChatLogic(shadow);
             };
             shadow.appendChild(script);
         }
     }
 })();
-
-
