@@ -1,7 +1,8 @@
 (function () {
     const scriptUrl = document.currentScript.src;
     const url = new URL(scriptUrl);
-    const WIDGET_URL = "."; //url.origin;
+    const WIDGET_URL = url.origin;
+    console.log(WIDGET_URL)
 
     // Create shadow root wrapper
     const widgetWrapper = document.createElement("div");
@@ -119,3 +120,4 @@
         }
     }
 })();
+
