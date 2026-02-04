@@ -88,16 +88,25 @@
         modal.addEventListener("click", (e) => e.stopPropagation());
 
         async function toggleChatModal(open) {
+            // Replace 'chat-widget' with the actual ID of your floating button
+            const widget = btn; 
+
             if (open) {
                 await loadChatModal();
                 modalContainer.style.opacity = "1";
                 modalContainer.style.pointerEvents = "auto";
+                
+                // Hide the widget when modal opens
+                console.log("Hiding chat widget",widget);
+                if (widget) widget.style.display = "none"; 
             } else {
                 modalContainer.style.opacity = "0";
                 modalContainer.style.pointerEvents = "none";
+                
+                // Show the widget when modal closes
+                if (widget) widget.style.display = "flex"; // or "block"
             }
         }
-
         window.toggleChatModal = toggleChatModal;
 
         async function loadChatModal() {
@@ -123,3 +132,4 @@
         }
     }
 })();
+
