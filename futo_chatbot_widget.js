@@ -17,7 +17,7 @@
     });
 
     async function initChatWidget() {
-        await fetch("https://futo-chatbot-server.onrender.com/healthz").catch(console.error);
+        //await fetch("https://futo-chatbot-server.onrender.com/healthz").catch(console.error);
 
         // --- Inject HTML inside Shadow ---
         
@@ -158,5 +158,6 @@
         }
     }
 })();
+
 
 
