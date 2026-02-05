@@ -79,6 +79,7 @@
             padding: 15px;
             margin-bottom: 15px;
             background-color: #f9f9f9;
+            scroll-behavior: smooth;
         }
         
         /* Message Styles (Unchanged) */
@@ -214,6 +215,7 @@
 
         .chat-input input {
             flex: 1;
+            margin: 5px;
             padding: 14px 16px;
             font-size: 1rem;
             border-radius: 25px;
@@ -278,22 +280,48 @@
         }
         
 
-        /* Mobile responsiveness (Unchanged) */
-        @media (max-width: 600px) {
+                    /* Mobile responsiveness (Unchanged) */
+        @media (max-width: 500px) {/* Ensure the body and html don't interfere */
+            html, body { height: 100%; margin: 0; padding: 0; }
+
             .chat-container {
+                display: flex;
+                flex-direction: column;
+                height: 100%; /* Fill the 80vh height we set in the JS */
+                width: 90%;
+                overflow: hidden;height: 80vh; 
+                max-height: 650px;
+            }
+
+            .chatbox {
+                display: flex;
+                flex-direction: column;
+                flex: 1; /* Fills all available space */
+                min-height: 0; /* CRITICAL: Allows the box to shrink */
+                padding: 15px;
+                background: white;
+            }
+
+            .chat-log {
+                flex: 1; /* Takes all remaining space in the middle */
+                overflow-y: auto; /* Scrollbar appears here only */
+                min-height: 0; /* CRITICAL: Prevents messages from pushing the button out */
+                border: 1px solid #eee;
                 padding: 10px;
-                margin: 0 auto; /* Removed top/bottom margin for better use of screen space */
+                margin-bottom: 10px;
+                min-width: 0;
             }
-            .chat-input button {
-                padding: 10px 12px;
-                font-size: 0.9rem;
-            }
+
+            .chat-input input {
+                display: flex;
+                gap: 10px;
+                padding: 10px 10px;
             
-            .user-message, .bot-message {
-                max-width: 90%;
-            }
-        }
+                min-width: 0;}
+
         
+        }
+                    
     </style>
 </head>
 <body>
@@ -335,5 +363,4 @@
     </script>
 </body>
 </html>
-
 
