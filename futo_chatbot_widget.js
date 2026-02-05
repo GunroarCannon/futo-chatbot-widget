@@ -37,9 +37,8 @@
                 #floating-chat-widget {
                     /* Apply the fade-in animation on load */
                     animation: fade-in-anim 0.8s ease-in forwards;
-                    
-                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
-                        0 4px 10px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4),
+                        0 4px 10px rgba(0, 0, 0, 0.4);
                 }
 
                 /* 2. Hover State */
@@ -50,9 +49,35 @@
                     /* Optional: Add a stronger shadow for a lifted look */
                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
                 }
-            </style>
+                
+                @media (max-width: 600px) {/* Ensure the body and html don't interfere */
+                    html, body { height: 100%; margin: 0; padding: 0;}
+                    #floating-chat-widget {
+                        padding-top: 15px !important;
+                        font-size: 0.25rem !important; /* Smaller font size */
+                        width: 3.5rem !important;  /* Equivalent to w-14 */
+                        height: 3.5rem !important; /* Equivalent to h-14 */
+                        bottom: 1rem !important;   /* Optional: move it closer to edge */
+                        right: 1rem !important;    /* Optional: move it closer to edge */
+                    } /* Ensure the text "Chat" doesn't look huge */  
+                     
+                    #floating-chat-widget span {
+                        font-size: 11px !important;
+                        line-height: 1 !important;
+                        padding-bottom: 10px !important;
+                    }
 
-            <link rel="stylesheet" href="${WIDGET_URL}/style.css">
+                    /* Target the icon specifically */
+                    #floating-chat-widget i, 
+                    #floating-chat-widget svg {
+                        font-size: 12px !important;
+                        margin-bottom: 2px !important;
+                    }
+                }
+
+            </style>
+<h1 class="text-5xl font-bold text-red-600 underline">Tailwind Test</h1>
+            <link rel="stylesheet" href="${WIDGET_URL}/src/style.css">
             <div 
                 id="floating-chat-widget"
                 class="fixed bottom-6 right-6 z-[9999] w-20 h-20 flex flex-col items-center justify-center p-2 bg-green-700 text-white 
@@ -71,7 +96,7 @@
             <div id="chat-modal-container"
                 class="fixed inset-0 z-[9998] flex items-center justify-center 
                     bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300">
-                <div id="chat-modal" class="w-full max-w-sm md:max-w-lg mx-4"></div>
+                <div id="chat-modal" class="w-full h-full max-h-[90vh] md:h-auto max-w-[95%] md:max-w-lg mx-auto flex flex-col justify-center"></div>
             </div>
         `;
 
@@ -133,4 +158,5 @@
         }
     }
 })();
+
 
