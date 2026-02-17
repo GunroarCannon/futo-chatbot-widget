@@ -76,7 +76,6 @@
                 }
 
             </style>
-<h1 class="text-5xl font-bold text-red-600 underline">Tailwind Test</h1>
             <link rel="stylesheet" href="${WIDGET_URL}/style.css">
             <div 
                 id="floating-chat-widget"
@@ -158,6 +157,7 @@
         }
     }
 })();
+
 
 
 
